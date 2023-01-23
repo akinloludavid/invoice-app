@@ -1,5 +1,7 @@
 "use client";
+import EditInvoice from "@/components/EditInvoice";
 import GoBack from "@/components/GoBack";
+import DeleteModal from "@/components/Modals/DeleteModal";
 import { StatusChip } from "@/components/StatusChip";
 import {
   Box,
@@ -12,15 +14,21 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import db from "../../../../data.json";
 const InvoiceDetails = ({ params }: any) => {
   const { id } = params;
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEditInvoice, setShowEditInvoice] = useState(false);
   const invoice = db.filter((el) => el.id === id)[0];
-  console.log(invoice);
   const cardBgColor = useColorModeValue("#ffffff", "#1E2139");
   const boldTextColor = useColorModeValue("#0C0E16", "#ffffff");
-
+  const handleDeleteModal = () => {
+    setIsOpen(false);
+  };
+  const showEditForm = () => {
+    setShowEditInvoice(true);
+  };
   const statusColor = useColorModeValue("#858BB2", "#DFE3FA");
   const lightTextColor = useColorModeValue(
     "lightMode.textColor",
@@ -31,6 +39,14 @@ const InvoiceDetails = ({ params }: any) => {
   const amountBgColor = useColorModeValue("#373B53", "#0C0E16");
   return (
     <Box pt={["64px"]} pb={["54px"]}>
+      {isEditInvoice && (
+        <EditInvoice
+          invoice={invoice}
+          setShowCreateInvoice={setShowEditInvoice}
+          id={id}
+        />
+      )}
+      <DeleteModal id={id} isOpen={isOpen} onClose={handleDeleteModal} />
       <GoBack />
       <Flex flexDirection={["column"]} mt={["32px"]} gap={["24px"]}>
         <Flex
@@ -46,8 +62,12 @@ const InvoiceDetails = ({ params }: any) => {
             <StatusChip status={invoice.status.toLowerCase()} />
           </Flex>
           <Flex gap={["8px"]} align={["center"]}>
-            <Button variant={"secondary"}>Edit</Button>
-            <Button variant="delete">Delete</Button>
+            <Button variant={"secondary"} onClick={showEditForm}>
+              Edit
+            </Button>
+            <Button variant="delete" onClick={() => setIsOpen(true)}>
+              Delete
+            </Button>
             <Button>Mark as Paid</Button>
           </Flex>
         </Flex>

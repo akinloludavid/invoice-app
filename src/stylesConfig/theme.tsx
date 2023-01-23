@@ -22,5 +22,6 @@ export const customTheme = extendTheme({
   colors: {
     lightMode: lightModeColors,
     darkMode: darkModeColors,
+    error: "#EC5757",
   },
 });

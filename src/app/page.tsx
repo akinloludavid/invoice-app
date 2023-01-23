@@ -1,6 +1,5 @@
 "use client";
-import Image from "next/image";
-import fonts from "@next/font/google";
+
 import { HiPlusCircle } from "react-icons/hi";
 import {
   Box,
@@ -13,12 +12,19 @@ import {
 } from "@chakra-ui/react";
 import db from "../../data.json";
 import InvoiceListComp from "@/components/InvoiceList";
+import { AnimatedView } from "@/components/AnimatedView";
+import { useState } from "react";
+import CreateInvoice from "@/components/CreateInvoice";
 export default function Home() {
+  const [showCreateInvoice, setShowCreateInvoice] = useState(false);
   const boldTextColor = useColorModeValue("#0C0E16", "#ffffff");
   const lightTextColor = useColorModeValue(
     "lightMode.textColor",
     "darkMode.lightText"
   );
+  const showCreateInvoiceForm = () => {
+    setShowCreateInvoice(true);
+  };
   return (
     <Box pt={["72px"]}>
       <Flex justify={"space-between"} align="center" mb={["65px"]}>
@@ -40,18 +46,24 @@ export default function Home() {
             fontSize={["12px"]}
             fontWeight={["700"]}
             letterSpacing="-0.25"
+            onClick={showCreateInvoiceForm}
           >
             New Invoice
           </Button>
         </Flex>
       </Flex>
       <Box>
-        {db.map((el) => (
-          <Box key={el.id} mb="16px">
-            <InvoiceListComp {...el} />
-          </Box>
+        {db.map((el, idx) => (
+          <AnimatedView key={el.id} delay={idx * 0.1}>
+            <Box mb="16px">
+              <InvoiceListComp {...el} />
+            </Box>
+          </AnimatedView>
         ))}
       </Box>
+      {showCreateInvoice && (
+        <CreateInvoice setShowCreateInvoice={setShowCreateInvoice} />
+      )}
     </Box>
   );
 }
